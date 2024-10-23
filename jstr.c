@@ -38,15 +38,14 @@ String plus_heap(String s1, String s2) {
 }
 
 int main() {
-    String s = new_String("hello ");
+    String s = new_String("hello");
     printf("%s\n", s.contents);
 
     String s2 = new_String("cse29");
 
-    String s3 = plus(s, s2);
-    String s4 = plus(s3, new_String("very long other string"));
+    String hello_cse = plus(s, s2);
+    String hello_bang = plus(s, new_String("!!!!"));
 
-    printf("%s\n", s3.contents);
-    printf("%s\n", s4.contents);
-
+    printf("%s\n", hello_cse.contents);
+    printf("%s\n", hello_bang.contents);
 }
