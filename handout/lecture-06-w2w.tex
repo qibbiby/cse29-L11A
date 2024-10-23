@@ -1,0 +1,127 @@
+\documentclass[12pt, oneside,landscape ]{article}
+\usepackage{fontspec}
+
+\usepackage{emoji}
+
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
+\newfontfamily\HiraginoSans{Hiragino Sans}
+
+
+\include{header}
+
+\usepackage{verbatim}
+
+\begin{document}
+
+\begin{minipage}{0.45\textwidth}
+{\scriptsize
+In contrast to C, languages like Python and Java (and others) have {\em
+immutable} strings that support operations like concatenation with {\tt +}. How
+does that work in the machine?}
+\begin{shell}[basicstyle=\ttfamily\scriptsize]
+$ python3
+>>> a = "hello "
+>>> b = "cse29"
+>>> c = a + b
+>>> c
+'hello cse29'
+>>> a
+'hello '
+>>> b
+'cse29'
+\end{shell}
+\end{minipage}
+\hspace{2em}
+\begin{minipage}{0.45\textwidth}
+\begin{shell}[basicstyle=\ttfamily\scriptsize]
+$ jshell
+jshell> String a = "hello ";
+a ==> "hello "
+jshell> String b = "cse29";
+b ==> "cse29"
+jshell> String c = a + b;
+c ==> "hello cse29"
+jshell> a
+a ==> "hello "
+jshell> b
+b ==> "cse29"
+jshell> c
+c ==> "hello cse29"
+\end{shell}
+\end{minipage}
+
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize]
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
+struct String {
+    uint64_t length; // should always equal strlen(contents)
+    char* contents;  // should always have allocated space of length + 1
+};
+
+typedef struct String String;
+
+String new_String(char* init_contents) {
+    uint64_t size = strlen(init_contents);
+    String r = { size, init_contents };
+    return r;
+}
+
+String plus(String s1, String s2) {
+    uint64_t new_size = s1.length + s2.length + 1;
+    char new_contents[new_size];
+    strncpy(new_contents, s1.contents, s1.length);
+    strncpy(new_contents + s1.length, s2.contents, s2.length);
+    new_contents[new_size - 1] = 0;
+    String r = { new_size - 1, new_contents };
+    return r;
+}
+
+int main() {
+    String s = new_String("hello");
+    printf("%s\n", s.contents);
+
+    String s2 = new_String("cse29");
+
+    String hello_cse = plus(s, s2);
+    String hello_bang = plus(s, new_String("!!!!"));
+
+    printf("%s\n", hello_cse.contents);
+    printf("%s\n", hello_bang.contents);
+}
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}
+String plus_heap(String s1, String s2) {
+    uint64_t new_size = s1.length + s2.length + 1;
+    char* new_contents = calloc(new_size, sizeof(char));
+    strncpy(new_contents, s1.contents, s1.length);
+    strncpy(new_contents + s1.length, s2.contents, s2.length);
+    new_contents[new_size - 1] = 0;
+    String r = { new_size, new_contents };
+    return r;
+}
+int main() {
+    String s = new_String("hello");
+    printf("%s\n", s.contents);
+
+    String s2 = new_String("cse29");
+
+    String hello_cse = plus_heap(s, s2);
+    String hello_bang = plus_heap(s, new_String("!!!!"));
+
+    printf("%s\n", hello_cse.contents);
+    printf("%s\n", hello_bang.contents);
+}
+\end{lstlisting}
+
+\end{document}
