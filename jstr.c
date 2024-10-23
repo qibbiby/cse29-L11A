@@ -44,7 +44,7 @@ int main() {
     String s2 = new_String("cse29");
 
     String hello_cse = plus(s, s2);
-    String hello_bang = plus(s, new_String("!!!!"));
+    String hello_bang = plus(s, new_String("!!!!!"));
 
     printf("%s\n", hello_cse.contents);
     printf("%s\n", hello_bang.contents);
