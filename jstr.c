@@ -13,13 +13,21 @@ typedef struct String String;
 
 String new_String(char* init_contents) {
     uint64_t size = strlen(init_contents);
-    char* contents = calloc(size, sizeof(char));
-    strcpy(contents, init_contents);
-    String r = { size, contents };
+    String r = { size, init_contents };
     return r;
 }
 
 String plus(String s1, String s2) {
+    uint64_t new_size = s1.length + s2.length + 1;
+    char new_contents[new_size];
+    strncpy(new_contents, s1.contents, s1.length);
+    strncpy(new_contents + s1.length, s2.contents, s2.length);
+    new_contents[new_size - 1] = 0;
+    String r = { new_size, new_contents };
+    return r;
+}
+
+String plus_heap(String s1, String s2) {
     uint64_t new_size = s1.length + s2.length + 1;
     char* new_contents = calloc(new_size, sizeof(char));
     strncpy(new_contents, s1.contents, s1.length);
@@ -29,13 +37,16 @@ String plus(String s1, String s2) {
     return r;
 }
 
-
 int main() {
-    String s = new_String("str");
+    String s = new_String("hello ");
     printf("%s\n", s.contents);
 
-    String s2 = new_String("another");
+    String s2 = new_String("cse29");
 
     String s3 = plus(s, s2);
+    printf("%s\n", s3.contents);
+
+    String s4 = plus(s3, s2);
+    printf("%s\n", s4.contents);
     printf("%s\n", s3.contents);
 }
