@@ -23,7 +23,7 @@ String plus(String s1, String s2) {
     strncpy(new_contents, s1.contents, s1.length);
     strncpy(new_contents + s1.length, s2.contents, s2.length);
     new_contents[new_size - 1] = 0;
-    String r = { new_size, new_contents };
+    String r = { new_size - 1, new_contents };
     return r;
 }
 
@@ -44,9 +44,9 @@ int main() {
     String s2 = new_String("cse29");
 
     String s3 = plus(s, s2);
-    printf("%s\n", s3.contents);
+    String s4 = plus(s3, new_String("very long other string"));
 
-    String s4 = plus(s3, s2);
-    printf("%s\n", s4.contents);
     printf("%s\n", s3.contents);
+    printf("%s\n", s4.contents);
+
 }
